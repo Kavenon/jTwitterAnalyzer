@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import pl.edu.agh.student.downloader.ConfigProvider;
 import pl.edu.agh.student.downloader.TweetRequest;
 import pl.edu.agh.student.downloader.TwitterDownloader;
-import twitter4j.Status;
+import pl.edu.agh.student.model.Tweet;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,17 +13,17 @@ import java.util.List;
 
 public class DownloadApp {
 
-    public static final ObjectMapper OM = new ObjectMapper();
+    private static final ObjectMapper OM = new ObjectMapper();
 
     public static void main( String[] args ){
 
         System.out.println("Twitter downloader started...");
         TwitterDownloader twitterDownloader = new TwitterDownloader(new ConfigProvider());
 
-        List<Status> result = twitterDownloader
+        List<Tweet> result = twitterDownloader
                 .getTweets(new TweetRequest("#stałempodblokiem", "pl", 5));
 
-        try(PrintWriter writer = new PrintWriter(new File(DownloadApp.class.getResource("/tweets.json").getPath()))){
+        try(PrintWriter writer = new PrintWriter(new File("filewithtweets.json"))){
             writer.write(OM.writeValueAsString(result));
         } catch (IOException e) {
             e.printStackTrace();
