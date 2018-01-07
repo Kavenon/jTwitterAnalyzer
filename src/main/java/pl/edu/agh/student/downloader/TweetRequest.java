@@ -5,11 +5,13 @@ public class TweetRequest {
     private String query;
     private String lang;
     private int limit;
+    private int requestedQuantity;
 
-    public TweetRequest(String query, String lang, int limit) {
+    public TweetRequest(String query, String lang, int limit, int requestedQuantity) {
         this.query = query;
         this.lang = lang;
         this.limit = limit;
+        this.requestedQuantity = requestedQuantity;
     }
 
     public String getQuery() {
@@ -34,5 +36,13 @@ public class TweetRequest {
 
     public void setLimit(int limit) {
         this.limit = limit;
+    }
+
+    public int getRequestedQuantity() {
+        return requestedQuantity;
+    }
+
+    public void setRequestedQuantity(int requestedQuantity) {
+        this.requestedQuantity = requestedQuantity;
     }
 }
