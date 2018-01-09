@@ -18,21 +18,25 @@ public class TwitterDownloader {
     public List<Tweet>getTweets(TweetRequest tweetRequest){
 
         Twitter twitter = new TwitterFactory(configProvider.getConfiguration()).getInstance();
-        Query query = new Query(tweetRequest.getQuery());
-
+        Query query = new Query(tweetRequest.getQuery() + "-filter:retweets");
         long lastID = Long.MAX_VALUE;
         ArrayList<Tweet> tweets = new ArrayList<>();
-        while (tweets.size () < tweetRequest.getLimit()) {
+        while (tweets.size () < tweetRequest.getRequestedQuantity()) {
 
             query.setLang(tweetRequest.getLang());
 
-            if (tweetRequest.getLimit() - tweets.size() > tweetRequest.getLimit())
+            if (tweetRequest.getRequestedQuantity() - tweets.size() > tweetRequest.getLimit())
                 query.setCount(tweetRequest.getLimit());
             else
-                query.setCount(tweetRequest.getLimit() - tweets.size());
+                query.setCount(tweetRequest.getRequestedQuantity() - tweets.size());
             try {
                 QueryResult result = twitter.search(query);
-                tweets.addAll(result.getTweets().stream().map(x -> new Tweet(x.getId(), x.getText())).collect(Collectors.toList()));
+                List<Tweet> list = result.getTweets().stream().map(x -> new Tweet(x.getId(), x.getText())).collect(Collectors.toList());
+
+                if(list.size() == 0)
+                    break;
+
+                tweets.addAll(list);
                 System.out.println("Gathered " + tweets.size() + " tweets");
                 for (Tweet t: tweets)
                     if(t.getId() < lastID) lastID = t.getId();
@@ -41,7 +45,7 @@ public class TwitterDownloader {
 
             catch (TwitterException te) {
                 System.out.println("Couldn't connect: " + te);
-            };
+            }
             query.setMaxId(lastID-1);
         }
 
