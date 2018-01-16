@@ -28,6 +28,18 @@
   </properties>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/com.apporiented/hierarchical-clustering -->
+    <dependency>
+      <groupId>com.apporiented</groupId>
+      <artifactId>hierarchical-clustering</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.carrot2</groupId>
+      <artifactId>morfologik-polish</artifactId>
+      <version>2.1.4</version>
+    </dependency>
 
     <dependency>
       <groupId>org.nd4j</groupId>
