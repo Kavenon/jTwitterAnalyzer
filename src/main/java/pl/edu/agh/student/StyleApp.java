@@ -19,7 +19,7 @@ public class StyleApp {
     public static void main(String[] args) throws JsonProcessingException, FileNotFoundException {
 
         TweetReader tweetReader = new TweetReader();
-        List<Tweet> read = tweetReader.read("tweets_oneline_100.csv");
+        List<Tweet> read = tweetReader.read("tweets_oneline_1000.csv");
 
         StyleDataPreparer styleDataPreparer = new StyleDataPreparer(read);
         List<Tweet> tweets = styleDataPreparer.prepare();
@@ -27,23 +27,8 @@ public class StyleApp {
         List<String> texts = tweets.stream().map(Tweet::getText).collect(Collectors.toList());
         List<String> users = tweets.stream().map(Tweet::getUser).collect(Collectors.toList());
 
-        new StyleAnalyzer(new DefaultModificator()).run(users, texts, "tree_default.js");
         new StyleAnalyzer(new PartOfSpeechModificator()).run(users, texts, "tree_pos.js");
-
-    }
-
-    public static Hierarchy toHierarchy(Cluster cluster) {
-
-        Hierarchy h = new Hierarchy();
-        h.setText(new HierarchyText(cluster.getName()));
-
-        h.setChildren(
-                cluster.getChildren()
-                .stream()
-                .map(StyleApp::toHierarchy)
-                .collect(Collectors.toList()));
-
-        return h;
+        new StyleAnalyzer(new DefaultModificator()).run(users, texts, "tree_default.js");
 
     }
 
