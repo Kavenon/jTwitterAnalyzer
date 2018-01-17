@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Draw</title>
+    <script type="text/javascript" src="tree.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="theme.css">
+
+</head>
+<body onload="load()">
+<div class="chart" id="OrganiseChart6"></div>
+<script src="raphael.js"></script>
+<script src="Treant.js"></script>
+
+<script src="example7.js"></script>
+<script>
+    function load(){
+        tree_structure.nodeStructure = JSON.parse(data);
+        new Treant( tree_structure );
+    }
+</script>
+</body>
+</html>
