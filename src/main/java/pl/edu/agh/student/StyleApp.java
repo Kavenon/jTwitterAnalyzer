@@ -1,9 +1,6 @@
 package pl.edu.agh.student;
 
-import com.apporiented.algorithm.clustering.Cluster;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import pl.edu.agh.student.model.Hierarchy;
-import pl.edu.agh.student.model.HierarchyText;
 import pl.edu.agh.student.model.Tweet;
 import pl.edu.agh.student.style.DefaultModificator;
 import pl.edu.agh.student.style.PartOfSpeechModificator;
