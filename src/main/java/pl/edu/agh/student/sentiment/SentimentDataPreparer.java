@@ -1,9 +1,7 @@
 package pl.edu.agh.student.sentiment;
 
-import pl.edu.agh.student.model.Tweet;
 import pl.edu.agh.student.model.TweetSentiment;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +35,7 @@ public class SentimentDataPreparer {
                 .filter(item -> !item.startsWith("http://"))
                 .filter(item -> !item.startsWith("https://"))
                 .filter(item -> !item.startsWith("#"))
+                .map(String::toLowerCase)
                 .collect(Collectors.toList());
 
         return String.join(" ", collect);
