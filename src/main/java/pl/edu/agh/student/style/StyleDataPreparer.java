@@ -40,6 +40,7 @@ public class StyleDataPreparer {
                 .filter(item -> !item.startsWith("http://"))
                 .filter(item -> !item.startsWith("https://"))
                 .filter(item -> !item.startsWith("#"))
+                .map(String::toLowerCase)
                 .collect(Collectors.toList());
 
         return String.join(" ", collect);
