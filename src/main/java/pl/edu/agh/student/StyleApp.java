@@ -2,10 +2,7 @@ package pl.edu.agh.student;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import pl.edu.agh.student.model.Tweet;
-import pl.edu.agh.student.style.DefaultModificator;
-import pl.edu.agh.student.style.PartOfSpeechModificator;
-import pl.edu.agh.student.style.StyleAnalyzer;
-import pl.edu.agh.student.style.StyleDataPreparer;
+import pl.edu.agh.student.style.*;
 
 import java.io.FileNotFoundException;
 import java.util.List;

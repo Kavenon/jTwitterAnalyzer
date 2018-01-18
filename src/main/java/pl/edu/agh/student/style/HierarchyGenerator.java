@@ -1,7 +1,6 @@
 package pl.edu.agh.student.style;
 
 import com.apporiented.algorithm.clustering.Cluster;
-import pl.edu.agh.student.StyleApp;
 import pl.edu.agh.student.model.Hierarchy;
 import pl.edu.agh.student.model.HierarchyText;
 
@@ -19,7 +18,7 @@ public class HierarchyGenerator {
         return toHierarchy(this.cluster);
     }
 
-    private Hierarchy toHierarchy(Cluster cluster) {
+    private static Hierarchy toHierarchy(Cluster cluster) {
 
         Hierarchy h = new Hierarchy();
         h.setText(new HierarchyText(cluster.getName()));
@@ -27,7 +26,7 @@ public class HierarchyGenerator {
         h.setChildren(
                 cluster.getChildren()
                         .stream()
-                        .map(StyleApp::toHierarchy)
+                        .map(HierarchyGenerator::toHierarchy)
                         .collect(Collectors.toList()));
 
         return h;

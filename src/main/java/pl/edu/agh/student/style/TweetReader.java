@@ -1,4 +1,4 @@
-package pl.edu.agh.student;
+package pl.edu.agh.student.style;
 
 import au.com.bytecode.opencsv.CSVReader;
 import pl.edu.agh.student.model.Tweet;
