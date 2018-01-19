@@ -13,20 +13,16 @@ def append(file_path, author, text, date, retweet_count, favorite_count, followe
     return
 
 try:
-    file_path = "tweets.csv"
+    file_path = "tweets_user.csv"
     if len(sys.argv) > 1:
-        file_path = sys.argv[1]
+        file_path = "tweets_" + sys.argv[1] + ".csv"
 
-    tso = TwitterSearchOrder()
-    tso.set_keywords(['sejm', 'pis'], or_operator=True)
-    tso.set_language('pl')
-    tso.set_include_entities(True)
-    tso.set_count(100)
+    tuo = TwitterUserOrder(sys.argv[1])
+    tuo.set_exclude_replies(True)
+    tuo.set_include_rts(False)
 
-    querystr = tso.create_search_url()
+    querystr = tuo.create_search_url()
 
-    tso2 = TwitterSearchOrder()
-    tso2.set_search_url(querystr + '&exclude=retweets')
 
     ts = TwitterSearch(
          consumer_key = 'tjYkJwTKlpK40ZblE2XIqbI8a',
@@ -35,12 +31,7 @@ try:
          access_token_secret = 'x2m3oZEkkR2dflLGUmXFtxGwj8r2mQvd6kBUizetmuNbI'
     )
 
-    def my_callback_closure(current_ts_instance):
-         queries, tweets_seen = current_ts_instance.get_statistics()
-         if queries > 0 and (queries % 5) == 0:
-             time.sleep(60)
-
-    for tweet in ts.search_tweets_iterable(tso2, callback=my_callback_closure):
+    for tweet in ts.search_tweets_iterable(tuo):
 
          tagsraw = tweet.get('entities', {'hashtags':[]}).get('hashtags', [])
          tags = []
