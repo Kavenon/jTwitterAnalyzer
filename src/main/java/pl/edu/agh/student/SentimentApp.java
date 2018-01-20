@@ -1,6 +1,9 @@
 package pl.edu.agh.student;
 
 import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
+import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
+import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
+import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import pl.edu.agh.student.model.TweetSentiment;
 import pl.edu.agh.student.sentiment.SentimentDataPreparer;
 import pl.edu.agh.student.sentiment.TweetSentimentReader;
@@ -47,8 +50,11 @@ public class SentimentApp {
         List<String> labels = tweets.stream().map(item -> item.getSentiment().name()).collect(Collectors.toList());
 
 
+        TokenizerFactory t = new DefaultTokenizerFactory();
+        t.setTokenPreProcessor(new CommonPreprocessor());
+
         VectorGenerator vectorGenerator = new VectorGenerator();
-        ParagraphVectors vec = vectorGenerator.generate(labels, texts);
+        ParagraphVectors vec = vectorGenerator.generate(labels, texts, t);
 
 
         Collection<String> no_elo = vec.nearestLabels("PiS Afryke podbija. Tydzien po targach w Hanowerze.", 1);

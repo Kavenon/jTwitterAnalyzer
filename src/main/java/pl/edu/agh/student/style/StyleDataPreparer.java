@@ -1,5 +1,6 @@
 package pl.edu.agh.student.style;
 
+import com.vdurmont.emoji.EmojiParser;
 import pl.edu.agh.student.model.Tweet;
 
 import java.util.ArrayList;
@@ -40,7 +41,9 @@ public class StyleDataPreparer {
                 .filter(item -> !item.startsWith("http://"))
                 .filter(item -> !item.startsWith("https://"))
                 .filter(item -> !item.startsWith("#"))
+                .map(EmojiParser::removeAllEmojis)
                 .map(String::toLowerCase)
+                .filter(item -> item != null && item.length() > 0)
                 .collect(Collectors.toList());
 
         return String.join(" ", collect);
