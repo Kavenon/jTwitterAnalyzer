@@ -62,9 +62,9 @@ public class StyleApp {
         VectorConfig vectorConfig2 = new VectorConfig();
         vectorConfig2.setMinWordFrequency(1);
         vectorConfig2.setIterations(1);
-        vectorConfig2.setEpochs(5);
+        vectorConfig2.setEpochs(4);
         vectorConfig2.setLayerSize(100);
-        vectorConfig2.setLearningRate(0.1);
+        vectorConfig2.setLearningRate(0.12);
         vectorConfig2.setWindowSize(5);
         vectorConfig2.setSampling(0);
         vectorConfig2.setTrainWordVectors(false);
@@ -90,8 +90,7 @@ public class StyleApp {
         vectorConfig4.setTrainWordVectors(false);
 
 
-        VectorConfig[] configs = new VectorConfig[]{vectorConfig, vectorConfig2, vectorConfig4, vectorConfig5};
-//        VectorConfig[] configs = new VectorConfig[]{vectorConfig5};
+        VectorConfig[] configs = new VectorConfig[]{vectorConfig5};
 
         for (VectorConfig config : configs) {
             System.out.println("Default - Default");
