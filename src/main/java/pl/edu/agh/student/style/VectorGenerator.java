@@ -6,18 +6,14 @@ import org.deeplearning4j.models.word2vec.wordstore.inmemory.AbstractCache;
 import org.deeplearning4j.text.documentiterator.LabelsSource;
 import org.deeplearning4j.text.sentenceiterator.CollectionSentenceIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
-import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
-import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 
 import java.util.List;
 
 public class VectorGenerator {
 
-    public ParagraphVectors generate(List<String> labels, List<String> texts){
+    public ParagraphVectors generate(List<String> labels, List<String> texts, TokenizerFactory tokenizerFactory){
         SentenceIterator iter = new CollectionSentenceIterator(texts);
-        TokenizerFactory t = new DefaultTokenizerFactory();
-        t.setTokenPreProcessor(new CommonPreprocessor());
 
         AbstractCache<VocabWord> cache = new AbstractCache<>();
         LabelsSource source = new LabelsSource(labels);
@@ -33,7 +29,8 @@ public class VectorGenerator {
                 .iterate(iter)
                 .trainWordVectors(false)
                 .vocabCache(cache)
-                .tokenizerFactory(t)
+                .tokenizerFactory(tokenizerFactory)
+                .allowParallelTokenization(false) //
                 .sampling(0)
                 .build();
 

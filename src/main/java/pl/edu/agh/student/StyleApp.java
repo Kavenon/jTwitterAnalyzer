@@ -2,6 +2,9 @@ package pl.edu.agh.student;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
+import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
+import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
+import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import pl.edu.agh.student.model.Tweet;
 import pl.edu.agh.student.style.*;
 
@@ -14,6 +17,8 @@ import java.util.stream.Stream;
 public class StyleApp {
 
     public static void main(String[] args) throws JsonProcessingException, FileNotFoundException {
+
+        System.out.println("Start");
 
         TweetReader tweetReader = new TweetReader();
 
@@ -28,11 +33,20 @@ public class StyleApp {
         List<String> texts = tweets.stream().map(Tweet::getText).collect(Collectors.toList());
         List<String> users = tweets.stream().map(Tweet::getUser).collect(Collectors.toList());
 
-        StyleAnalyzer styleAnalyzerPos = new StyleAnalyzer(new PartOfSpeechModificator());
-        ParagraphVectors vcPos = styleAnalyzerPos.run(users, texts, "tree_pos.js");
+        TokenizerFactory t = new DefaultTokenizerFactory();
+        t.setTokenPreProcessor(new CommonPreprocessor());
+//
+//        TokenizerFactory t = new OwnNGramTokenizerFactory(new DefaultTokenizerFactory(), 1, 4);
+//        t.setTokenPreProcessor(new CommonPreprocessor());
 
+        System.out.println("Start DEFAULT");
         StyleAnalyzer styleAnalyzerDefault = new StyleAnalyzer(new DefaultModificator());
-        ParagraphVectors vcDefault = styleAnalyzerDefault.run(users, texts, "tree_default.js");
+        ParagraphVectors vcDefault = styleAnalyzerDefault.run(users, texts, "tree_default.js", t);
+
+        System.out.println("Start POS");
+        StyleAnalyzer styleAnalyzerPos = new StyleAnalyzer(new PartOfSpeechModificator());
+        ParagraphVectors vcPos = styleAnalyzerPos.run(users, texts, "tree_pos.js", t);
+
 
         // ============================================
 
@@ -43,7 +57,6 @@ public class StyleApp {
 
         StyleDataPreparer styleDataPreparerTest = new StyleDataPreparer(readTest);
         List<Tweet> tweetsTest = styleDataPreparerTest.prepare();
-
 
         System.out.println("POS results");
         styleAnalyzerPos.test(tweetsTest, vcPos);
