@@ -2,7 +2,6 @@ package pl.edu.agh.student.style;
 
 import com.apporiented.algorithm.clustering.Cluster;
 import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
-import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import pl.edu.agh.student.model.Hierarchy;
 import pl.edu.agh.student.model.Tweet;
 
@@ -17,14 +16,14 @@ public class StyleAnalyzer {
         this.modificator = modificator;
     }
 
-    public ParagraphVectors run(List<String> labels, List<String> texts, String filename, TokenizerFactory tokenizerFactory){
+    public ParagraphVectors run(List<String> labels, List<String> texts, String filename, ParagraphVectors.Builder builder){
 
         texts = texts.stream()
                 .map(this.modificator::modify)
                 .collect(Collectors.toList());
 
         VectorGenerator vectorGenerator = new VectorGenerator();
-        ParagraphVectors vec = vectorGenerator.generate(labels, texts, tokenizerFactory);
+        ParagraphVectors vec = vectorGenerator.generate(labels, texts, builder);
 
         HierarchicalClutering hierarchicalClutering = new HierarchicalClutering(labels, vec);
         Cluster cluster = hierarchicalClutering.cluster();

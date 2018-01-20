@@ -54,7 +54,7 @@ public class SentimentApp {
         t.setTokenPreProcessor(new CommonPreprocessor());
 
         VectorGenerator vectorGenerator = new VectorGenerator();
-        ParagraphVectors vec = vectorGenerator.generate(labels, texts, t);
+        ParagraphVectors vec = vectorGenerator.generate(labels, texts, null);
 
 
         Collection<String> no_elo = vec.nearestLabels("PiS Afryke podbija. Tydzien po targach w Hanowerze.", 1);
