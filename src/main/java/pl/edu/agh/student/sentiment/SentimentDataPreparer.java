@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 public class SentimentDataPreparer {
 
     private List<TweetSentiment> tweets;
+    private MorfologikSentimentTool morfTool = new MorfologikSentimentTool();
 
     public SentimentDataPreparer(List<TweetSentiment> tweets) {
         this.tweets = tweets;
@@ -29,17 +30,26 @@ public class SentimentDataPreparer {
     }
 
     private String cleanText(String text) {
-
         List<String> collect = Arrays.stream(text.split(" "))
                 .filter(item -> !item.startsWith("@"))
                 .filter(item -> !item.startsWith("http://"))
                 .filter(item -> !item.startsWith("https://"))
                 .filter(item -> !item.startsWith("#"))
+                .map(item -> removePunctuationMark(item))
                 .map(String::toLowerCase)
+                .map(item -> morfTool.mapWithBasicForms(item))
                 .collect(Collectors.toList());
 
         return String.join(" ", collect);
-
     }
 
+    private String removePunctuationMark(String word) {
+        String marksList = ".,?!@#$%^&*\\()-_=+[{]};:'|<>/`~\"\'";
+
+        for(String letter : marksList.split("")){
+            word = word.replace(letter, "");
+        }
+
+        return word;
+    }
 }
