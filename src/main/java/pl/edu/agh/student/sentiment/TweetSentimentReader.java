@@ -29,6 +29,23 @@ public class TweetSentimentReader {
         return inputList ;
     }
 
+    public List<String> readUnlabelled(String file){
+        List<String> inputList = new ArrayList<>();
+        try{
+
+            CSVReader reader = new CSVReader(new FileReader(file), ';');
+
+            return reader.readAll()
+                    .stream()
+                    .map(p -> unwrap(p[0]))
+                    .collect(Collectors.toList());
+
+        } catch (IOException e) {
+            System.out.println("Could not read tweets: " + e.getMessage());
+        }
+        return inputList ;
+    }
+
     private TweetSentiment mapToTweet(String[] row) {
         TweetSentiment tweet = new TweetSentiment();
         tweet.setText(unwrap(row[0]));

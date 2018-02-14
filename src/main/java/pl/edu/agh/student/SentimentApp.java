@@ -1,6 +1,8 @@
 package pl.edu.agh.student;
 
 import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
+import org.deeplearning4j.models.word2vec.VocabWord;
+import org.deeplearning4j.models.word2vec.wordstore.inmemory.AbstractCache;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
@@ -41,7 +43,7 @@ public class SentimentApp {
 //        net.setListeners(new ScoreIterationListener(1));
 
         TweetSentimentReader tweetReader = new TweetSentimentReader();
-        List<TweetSentiment> read = tweetReader.read("tweets_oneline_100_train.csv");
+        List<TweetSentiment> read = tweetReader.read("sentiment_train_data.csv");
 
         SentimentDataPreparer preparer = new SentimentDataPreparer(read);
         List<TweetSentiment> tweets = preparer.prepare();
@@ -49,18 +51,72 @@ public class SentimentApp {
         List<String> texts = tweets.stream().map(TweetSentiment::getText).collect(Collectors.toList());
         List<String> labels = tweets.stream().map(item -> item.getSentiment().name()).collect(Collectors.toList());
 
-
-        TokenizerFactory t = new DefaultTokenizerFactory();
-        t.setTokenPreProcessor(new CommonPreprocessor());
+        AbstractCache<VocabWord> cache = new AbstractCache<>();
 
         VectorGenerator vectorGenerator = new VectorGenerator();
-        ParagraphVectors vec = vectorGenerator.generate(labels, texts, null);
+        ParagraphVectors.Builder builder = new ParagraphVectors.Builder();
+        ParagraphVectors vec = vectorGenerator.generate(labels, texts, builder, cache);
 
+        int right = 0;
+        int wrong = 0;
+        for(int i=0; i < texts.size(); i++)
+        {
+            String text = texts.get(i);
+            String label = labels.get(i);
+            //Collection<String> no_elo = vec.predictSeveral(text, 3);
+            Collection<String> no_elo = vec.nearestLabels(text, 1);
+            if(label == no_elo.toArray()[0])
+                right++;
+            else
+                wrong++;
+            String a = "aaa";
+        }
 
-        Collection<String> no_elo = vec.nearestLabels("PiS Afryke podbija. Tydzien po targach w Hanowerze.", 1);
+        System.out.println("Skuteczność ucząca:" + ((right * 100)/(right + wrong)) + "%");
 
-        System.out.println("Starting training:" + no_elo);
+        TweetSentimentReader tweetReader2 = new TweetSentimentReader();
+        List<TweetSentiment> read2 = tweetReader.read("sentiment_test_data.csv");
 
+        for(TweetSentiment tweet : read2)
+        {
+            tweet.setText(preparer.cleanText(tweet.getText()));
+        }
+
+        int right2 = 0;
+        int rightPos = 0;
+        int rightNeu = 0;
+        int rightNeg = 0;
+        int wrong2 = 0;
+        for(int i=0; i < read2.size(); i++)
+        {
+            String text = read2.get(i).getText();
+            String label = read2.get(i).getSentiment().toString();
+            //Collection<String> no_elo = vec.predictSeveral(text, 3);
+            Collection<String> no_elo = vec.nearestLabels(text, 1);
+            if(no_elo.toArray().length == 0)
+                System.out.println("Brak przypisania: " + text);
+            else {
+                String predictedLabel = no_elo.toArray()[0].toString();
+                if (label == predictedLabel) {
+                    right2++;
+
+                    if(predictedLabel.equals("POS"))
+                        rightPos++;
+                    else if(predictedLabel.equals("NEU"))
+                        rightNeu++;
+                    else if(predictedLabel.equals("NEG"))
+                        rightNeg++;
+                }
+                else
+                    wrong2++;
+            }
+            String a = "aaa";
+        }
+
+        System.out.println("Skuteczność testowa:" + ((right2 * 100)/(right2 + wrong2)) + "%");
+        System.out.println("Poprawne POS:" + rightPos);
+        System.out.println("Poprawne NEU:" + rightNeu);
+        System.out.println("Poprawne NEG:" + rightNeg);
         // values n*[sentence vector]
 //        net.fit(Nd4j.create(values), Nd4j.create(collect));
 

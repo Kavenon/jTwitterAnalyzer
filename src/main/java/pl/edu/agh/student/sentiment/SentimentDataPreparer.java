@@ -1,5 +1,6 @@
 package pl.edu.agh.student.sentiment;
 
+import com.google.common.primitives.Ints;
 import pl.edu.agh.student.model.TweetSentiment;
 
 import java.util.Arrays;
@@ -29,27 +30,33 @@ public class SentimentDataPreparer {
 
     }
 
-    private String cleanText(String text) {
+    public String cleanText(String text) {
         List<String> collect = Arrays.stream(text.split(" "))
                 .filter(item -> !item.startsWith("@"))
                 .filter(item -> !item.startsWith("http://"))
                 .filter(item -> !item.startsWith("https://"))
                 .filter(item -> !item.startsWith("#"))
-                .map(item -> removePunctuationMark(item))
                 .map(String::toLowerCase)
+                .map(item -> removePunctuationMarks(item))
+                .filter(item -> item.length() > 0)
                 .map(item -> morfTool.mapWithBasicForms(item))
                 .collect(Collectors.toList());
 
         return String.join(" ", collect);
     }
 
-    private String removePunctuationMark(String word) {
-        String marksList = ".,?!@#$%^&*\\()-_=+[{]};:'|<>/`~\"\'";
 
-        for(String letter : marksList.split("")){
-            word = word.replace(letter, "");
+
+    private String removePunctuationMarks(String word) {
+
+        int[] polishLetter = new int[]{261, 263, 281, 322, 324, 243, 347, 378, 380 };
+        String newString = "";
+        for(char letter : word.toCharArray()){
+            if(((int)letter >= 97 && (int)letter <= 122) || Ints.contains(polishLetter, (int)letter)) {
+                newString += letter;
+            }
         }
 
-        return word;
+        return newString;
     }
 }
