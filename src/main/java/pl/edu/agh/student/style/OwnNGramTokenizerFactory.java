@@ -54,11 +54,6 @@ public class OwnNGramTokenizerFactory implements TokenizerFactory {
         this.preProcess = preProcessor;
     }
 
-    /**
-     * Returns TokenPreProcessor set for this TokenizerFactory instance
-     *
-     * @return TokenPreProcessor instance, or null if no preprocessor was defined
-     */
     @Override
     public TokenPreProcess getTokenPreProcessor() {
         return preProcess;
